@@ -13,8 +13,9 @@ export default function AnnualReport() {
   return <main className="dashboard-layout"><div className="workspace-content">
     <section className="dashboard-heading"><div className="shell"><h1>Annual report</h1></div></section>
     {account ? <div className="shell">
-      <p className="report-actions"><a className="action" href={pdf} download>Download the PDF</a>
-        <span>The report is shown below. If it does not appear, use the download link.</span></p>
+      <p className="report-actions"><span className="demo-tag">Demo</span>
+        <a className="action" href={pdf} download>Download the PDF</a></p>
+      <p className="report-note">This is a placeholder built from sample data. Once members report consistently, TPW can generate this report from real submissions — the kind of document it can use to advocate for programs, facilities and funding.</p>
       <object className="report-embed" data={pdf} type="application/pdf" aria-label="Annual report PDF">
         <p className="report-embed-fallback">This browser cannot display PDFs here. <a href={pdf} download>Download the annual report</a>.</p>
       </object>

@@ -543,9 +543,9 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                             if (!event.target.checked) forgetCarried(location.code, yard);
                             setEditing({ ...editing, sites: event.target.checked ? [...editing.sites, siteFor(yard)] : editing.sites.filter(item => item !== site) });
                           }} />{yard}</label>
-                        {[['participants', 'Participants enrolled', 'Enrolled'], ['completed', 'Completed', 'Completed']].map(([key, label, hint]) =>
+                        {!!site && [['participants', 'Participants enrolled', 'Enrolled'], ['completed', 'Completed', 'Completed']].map(([key, label, hint]) =>
                           <NumberStepper key={key} id={'count-' + location.code + '-' + yard + '-' + key} label={label + ' at ' + yard}
-                            disabled={!site} placeholder={site ? hint : '—'} value={site ? site[key] : ''}
+                            placeholder={hint} value={site[key]}
                             onChange={value => setYardCount(location.code, yard, key, value)} />)}
                         {over && <p className="yard-count-error">Completed cannot exceed enrollment at this yard.</p>}
                       </div>;

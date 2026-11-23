@@ -797,6 +797,14 @@
 
 .tpw-site .tpw-workspace .quarter-preview .program-yards .yard-number-row { grid-template-columns: minmax(150px, 280px) 132px 132px; }
 .tpw-site .tpw-workspace .quarter-preview .program-yards .count-input { font-size: 14px; }
+
+/* Containment shown once, by a single guide line under the facility, not by a rule per block. */
+.tpw-site .tpw-workspace .quarter-preview .assignment-row { border-top: 0; }
+.tpw-site .tpw-workspace .quarter-preview .program-assignments { gap: 2px; }
+.tpw-site .tpw-workspace .quarter-preview .program-yards {
+  margin: 0 0 10px 9px; padding: 0 0 0 20px; border-left: 2px solid #dce4d8; border-radius: 0;
+}
+.tpw-site .tpw-workspace .quarter-preview .yard-number-row:not(:has(.count-input)) { grid-template-columns: minmax(150px, 1fr); }
 }
 
 /* Quarter dates and empty-state instructions. */

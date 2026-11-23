@@ -303,6 +303,11 @@ a.program-stat:hover { background: #edf5e8; border-color: var(--sage); }
 .savings-source { font-size: 14px; color: #4c4c4c; }
 @media(max-width: 650px) { .rac-pair { grid-template-columns: 1fr; } }
 
+
+.report-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; }
+.report-actions .demo-tag { align-self: center; }
+.demo-tag { display: inline-block; padding: 2px 8px; border-radius: 999px; background: #fff0d5; color: #6b4a12; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+.report-note { max-width: 70ch; margin: 0 0 20px; color: #3e3e3e; font-size: 16px; line-height: 1.5; }
 }
 
 @scope (:is([data-dashboard-view="programs"], [data-dashboard-view="members"])) {
