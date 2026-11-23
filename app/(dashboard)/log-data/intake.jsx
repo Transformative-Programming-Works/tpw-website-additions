@@ -70,6 +70,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
   const [programs, setPrograms] = useState([]);
   const [editing, setEditing] = useState(null);
   const carried = useRef(new Set());
+  const autoOpened = useRef(false);
   const [problems, setProblems] = useState([]);
   const [pending, setPending] = useState(null);
   const [receipt, setReceipt] = useState('');
@@ -140,9 +141,14 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
   // (and immediately for ?blank=1 or the staff view), so prefill and a recovered attempt have
   // already been applied before this can open a blank editor over them.
   useEffect(() => {
-    if (!loaded || prefillFailed || done || pending || editing || programs.length) return;
-    setEditing(newProgram());
-  }, [loaded, prefillFailed, done, pending, editing, programs.length]);
+    if (!loaded || prefillFailed || done || pending || editing || autoOpened.current) return;
+    autoOpened.current = true;
+    // Carried-forward programs open straight away, once: the member has to fill them in anyway,
+    // and collapsing a row afterwards must stay collapsed.
+    if (!programs.length) { setEditing(newProgram()); return; }
+    const waiting = programs.find(program => !isReady(program));
+    if (waiting) setEditing(waiting);
+  }, [loaded, prefillFailed, done, pending, editing, programs]);
 
   function retryPrefill() {
     setPrefillFailed(false);
@@ -201,23 +207,22 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
     carried.current.delete(markKey(code, yard, key));
     setEditing(current => {
       if (!current) return current;
-      const sites = current.sites.filter(site => site.facilityCode === code);
-      const order = [...new Set([...(locations.find(item => item.code === code)?.yards || []), ...sites.map(site => site.yard)])];
-      const first = order.find(name => sites.some(site => site.yard === name));
-      const carry = first === yard && String(value).trim() !== '';
+      const sites = current.sites;
+      const firstIndex = 0;
+      const isTemplate = sites[firstIndex]?.facilityCode === code && sites[firstIndex]?.yard === yard;
+      const carry = isTemplate && String(value).trim() !== '';
       const mirrors = new Set();
       if (carry) for (const site of sites) {
-        if (site.yard === yard) continue;
+        if (site.facilityCode === code && site.yard === yard) continue;
         const mark = markKey(code, site.yard, key);
         if (!carried.current.has(mark) && String(site[key] ?? '').trim() !== '') continue;
         if (key === 'completed' && Number(value) > Number(site.participants || 0)) continue;
-        mirrors.add(site.yard);
+        mirrors.add(site.facilityCode + '\u0000' + site.yard);
       }
-      for (const name of mirrors) carried.current.add(markKey(code, name, key));
+      for (const name of mirrors) { const [c, y] = name.split('\u0000'); carried.current.add(markKey(c, y, key)); }
       return { ...current, sites: current.sites.map(site => {
-        if (site.facilityCode !== code) return site;
-        if (site.yard === yard) return { ...site, [key]: value };
-        return mirrors.has(site.yard) ? { ...site, [key]: value } : site;
+        if (site.facilityCode === code && site.yard === yard) return { ...site, [key]: value };
+        return mirrors.has(site.facilityCode + '\u0000' + site.yard) ? { ...site, [key]: value } : site;
       }) };
     });
   }
@@ -463,17 +468,16 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
               const { participants, participantsCompleted } = counts(program.sites);
               return <li key={program.id}>
                 <div className="program-row">
-                  <div className="program-toggle" style={{ cursor: 'inherit' }}>
+                  <button type="button" className="program-toggle" aria-expanded={editing?.id === program.id}
+                    onClick={() => { setProblems([]); setEditing(editing?.id === program.id ? null : program); }}>
                     <span className="added-name">{program.name}</span>
                     <span className={`program-state${isReady(program) ? ' is-ready' : ''}`}>
-                      {!program.status ? 'Needs review' : program.sites.length ? <><LuCheck aria-hidden="true" />{`Ready · ${participants} enrolled · ${participantsCompleted} completed`}</> : 'Choose facilities & yards'}
+                      {!program.status ? 'Needs a status' : program.sites.length ? <><LuCheck aria-hidden="true" />{`Ready · ${participants} enrolled · ${participantsCompleted} completed`}</> : 'Choose facilities & yards'}
                     </span>
-                  </div>
-                  {!pending &&
-                    <button type="button" className={`continue-button program-review${program.status ? ' program-edit' : ''}`} aria-label={`${program.status ? 'Edit' : 'Review'} ${program.name}`} onClick={() => { setProblems([]); setEditing(program); }}>{program.status ? 'Edit' : 'Review'}</button>}
-                  {!pending && <button type="button" disabled={!!editing && editing.id !== program.id} className="continue-button program-delete" aria-label={`Remove ${program.name}`} onClick={() => {
+                  </button>
+                  {!pending && <button type="button" className="program-delete" aria-label={`Remove ${program.name}`} onClick={() => {
                     setPrograms(programs.filter(item => item.id !== program.id));
-                    if (programs.length === 1) setEditing(newProgram());
+                    if (editing?.id === program.id) setEditing(null);
                   }}>Remove</button>}
                 </div>
               </li>;

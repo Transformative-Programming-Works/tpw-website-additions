@@ -735,6 +735,42 @@
 .tpw-site .tpw-workspace .quarter-preview .program-yards .yard-count { display: grid; gap: 4px; min-width: 0; flex: initial; }
 .tpw-site .tpw-workspace .quarter-preview .program-yards .yard-count .count-input { width: 100%; flex: none; }
 .tpw-site .tpw-workspace .quarter-preview .program-yards .yard-count-label { white-space: nowrap; }
+
+/* One size system: 44px controls, 15px labels, no separators, no spinners, no card chrome. */
+.tpw-site .tpw-workspace .quarter-preview :is(input:not([type=checkbox]):not([type=radio]), select) { min-height: 44px; font-size: 16px; }
+.tpw-site .tpw-workspace .quarter-preview .count-input { min-height: 44px; font-size: 16px; padding: 6px 10px; }
+.tpw-site .tpw-workspace .quarter-preview input[type=number] { -moz-appearance: textfield; appearance: textfield; }
+.tpw-site .tpw-workspace .quarter-preview input[type=number]::-webkit-outer-spin-button,
+.tpw-site .tpw-workspace .quarter-preview input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.tpw-site .tpw-workspace .quarter-preview :is(.field-label, .form-field > label, .yard-count-label) { font-size: 15px; font-weight: 700; }
+
+/* Program list: rows toggle the editor; nothing to click but the row itself. */
+.tpw-site .tpw-workspace .quarter-preview #program-next .added-programs > li,
+.tpw-site .tpw-workspace .quarter-preview .added-programs > li { background: transparent; border: 0; border-radius: 0; padding: 10px 0 10px 32px; }
+.tpw-site .tpw-workspace .quarter-preview .added-programs > li::before { left: 0; top: 14px; color: #4c4c4c; }
+.tpw-site .tpw-workspace .quarter-preview .added-programs > .is-open { background: transparent; padding-block: 10px; }
+.tpw-site .tpw-workspace .quarter-preview .program-row { align-items: center; }
+.tpw-site .tpw-workspace .quarter-preview .program-toggle { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; width: 100%; min-height: 44px; padding: 0; border: 0; background: none; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.tpw-site .tpw-workspace .quarter-preview .program-toggle .added-name { font-weight: 700; }
+.tpw-site .tpw-workspace .quarter-preview .program-toggle .program-state { color: #4c4c4c; font-size: 14px; }
+.tpw-site .tpw-workspace .quarter-preview .program-toggle[aria-expanded="true"] .program-state { color: #214c30; }
+.tpw-site .tpw-workspace .quarter-preview .program-delete { min-height: 44px; padding: 0 4px; border: 0; background: none; color: #4c4c4c; font: inherit; font-size: 14px; text-decoration: underline; cursor: pointer; }
+.tpw-site .tpw-workspace .quarter-preview .program-delete:hover { color: #000; }
+
+/* Section headings and blocks keep one rhythm. */
+.tpw-site .tpw-workspace .quarter-preview .editor-heading { font-size: 17px; margin: 0 0 4px; }
+.tpw-site .tpw-workspace .quarter-preview .editor-section { gap: 14px; }
+.tpw-site .tpw-workspace .quarter-preview .assignment-row { padding: 0; }
+
+/* No separators between sections or inside a program; spacing and headings do that job. */
+.tpw-site .tpw-workspace .quarter-preview .report-section,
+.tpw-site .tpw-workspace .quarter-preview .editor-section { border-top: 0; padding-top: 0; }
+.tpw-site .tpw-workspace .quarter-preview .report-section { margin-top: 32px; }
+.tpw-site .tpw-workspace .quarter-preview .editor-section + .editor-section { margin-top: 8px; padding-top: 0; border-top: 0; }
+.tpw-site .tpw-workspace .quarter-preview .editor-heading { margin: 0 0 2px; }
+
+/* The program header is a heading, not a table rule. */
+.tpw-site .tpw-workspace .quarter-preview .program-card .organization-summary { padding-bottom: 0; border-bottom: 0; }
 }
 
 /* Quarter dates and empty-state instructions. */
