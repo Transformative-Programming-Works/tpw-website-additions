@@ -285,7 +285,7 @@
   .program-card .continue-button { font-size: 16px; }
   .program-card .organization-summary .program-remove { font-size: 13px; }
 
-  .next-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+  .next-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 14px; margin-top: 4px; }
   #another-program { background: #edf6ef; color: #000; border: 1px solid var(--sage); }
   #program-next, #submission-result { border: 1px solid #d4e2d6; border-radius: 12px; padding: 24px; background: #f0f5f0; }
 
@@ -550,8 +550,8 @@
 
 /* Program editor: three labelled sections instead of one undifferentiated column. */
 .editor-section { border: 0; margin: 0; padding: 0; display: grid; gap: 18px; min-width: 0; }
-.editor-section > legend { padding: 0; margin-bottom: 2px; font-size: 19px; font-weight: 700; }
-.editor-section > legend + .form-hint { margin-top: -10px; }
+.editor-section > legend, .editor-heading { padding: 0; margin: 0; font-size: 19px; font-weight: 700; }
+
 .editor-section + .editor-section { margin-top: 4px; padding-top: 24px; border-top: 1px solid #e6e6e6; }
 .error-summary { border: 2px solid #b3261e; border-radius: 10px; padding: 16px 18px; background: #fdf3f2; }
 .error-summary h4 { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 19px; }
@@ -613,4 +613,4 @@
 .date-block .form-hint { margin: 0; }
 .quarter-fill { justify-self: start; min-height: 44px; padding: 8px 16px; border: 1px solid #7e8a7a; border-radius: 999px; background: #fff; color: var(--ink); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
 .quarter-fill:hover { background: #f0f5f0; }
-.section-empty { margin: 0; padding: 12px 14px; border: 1px dashed #b9c8b8; border-radius: 8px; background: #fbfbf9; color: #3e3e3e; font-size: 16px; line-height: 1.5; }
+.section-empty { margin: 4px 0 16px; padding: 12px 14px; border: 1px dashed #b9c8b8; border-radius: 8px; background: #fbfbf9; color: #3e3e3e; font-size: 16px; line-height: 1.5; }

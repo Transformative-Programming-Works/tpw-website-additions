@@ -375,7 +375,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
         <section id="reporting-period" className="report-section" aria-labelledby="reporting-period-heading">
           <h2 id="reporting-period-heading" className="report-heading">Reporting period</h2>
           {period ? <>
-            <p className="form-hint">We’ve selected the current quarter. Change it to report for a different period.</p>
+
             {quarterRange && <p className="quarter-range"><strong>Q{period.quarter} {period.year}</strong> runs {quarterRange.label}.</p>}
             <fieldset className="quarter-options"><legend className="sr-only">Reporting quarter</legend>
               {['Jan – Mar', 'Apr – Jun', 'Jul – Sep', 'Oct – Dec'].map((months, index) => <label key={months}>
@@ -389,7 +389,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
 
         <section id="facilities" className="report-section" aria-labelledby="facilities-heading">
           <h2 id="facilities-heading" className="report-heading">Facilities and yards</h2>
-          <p className="form-hint">Select each facility where you operate, then check all the yards you work in at that facility.</p>
+
           <div id="facility-rows" className="facility-rows">
             {locations.map(location => <div className="facility-row" key={location.code}>
               <div className="facility-row-header">
@@ -422,7 +422,6 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
 
         <section id="programs" className="report-section" aria-labelledby="programs-heading">
           <h2 id="programs-heading" className="report-heading">Programs</h2>
-          <p className="form-hint">Add each program, then choose the yards where it runs and how many people attended.</p>
           {!!programs.length && <ol className="added-programs" role="list" aria-label="Programs this quarter">
             {programs.map(program => {
               const { participants, participantsCompleted } = counts(program.sites);
@@ -454,8 +453,8 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
               </li>)}</ol>
             </div>}
 
-            <fieldset className="editor-section">
-              <legend>1. The program</legend>
+            <section className="editor-section" aria-labelledby="program-section-1">
+              <h3 className="editor-heading" id="program-section-1">The program</h3>
               <label className="form-field"><span className="field-label">Program name</span>
                 <input id="program-name" maxLength={120} placeholder="Enter your program name" aria-required="true"
                   value={editing.name} onChange={event => setEditing({ ...editing, name: event.target.value })} /></label>
@@ -479,11 +478,10 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
               </div>
               <label className="form-field"><span className="field-label">Course hours <span className="label-note">(per participant)</span></span>
                 <NumberStepper id="program-hours" value={editing.courseHours} onChange={courseHours => setEditing({ ...editing, courseHours })} fractional /></label>
-            </fieldset>
+            </section>
 
-            <fieldset className="editor-section" id="program-facilities" tabIndex={-1}>
-              <legend>2. Where it ran</legend>
-              <p className="form-hint">Choose each facility, then the yards where this program runs.</p>
+            <section className="editor-section" id="program-facilities" tabIndex={-1} aria-labelledby="program-section-2">
+              <h3 className="editor-heading" id="program-section-2">Where it ran</h3>
               <div className="program-assignments">{locations.map(location => {
                 const selectedCodes = editing.selectedFacilityCodes ?? [...new Set(editing.sites.map(site => site.facilityCode))];
                 const selected = selectedCodes.includes(location.code);
@@ -494,8 +492,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                     selectedFacilityCodes: selected ? selectedCodes.filter(code => code !== location.code) : [...selectedCodes, location.code],
                     sites: selected ? editing.sites.filter(site => site.facilityCode !== location.code) : editing.sites
                   })} />{location.name}</label>
-                  {selected && <fieldset className="program-yards"><legend>Yards for this program</legend>
-                    <p className="yard-hint">Choose the yards where this program runs.</p>
+                  {selected && <fieldset className="program-yards"><legend>Yards</legend>
                     {location.yards.map(yard => {
                       const site = editing.sites.find(item => item.facilityCode === location.code && item.yard === yard);
                       return <label key={yard}><input type="checkbox" checked={!!site} onChange={() => setEditing({
@@ -506,11 +503,10 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                 </div>;
               })}</div>
               {!locations.length && <p className="section-empty">Add a facility in “Facilities and yards” above, then its yards will be listed here.</p>}
-            </fieldset>
+            </section>
 
-            <fieldset className="editor-section">
-              <legend>3. How many people</legend>
-              <p className="form-hint">One row per yard. Type the numbers; use 0 if nobody attended.</p>
+            <section className="editor-section" aria-labelledby="program-section-3">
+              <h3 className="editor-heading" id="program-section-3">Participants at each yard</h3>
               <div className="yard-number-rows">{editing.sites.map(site =>
                 <div className={`yard-number-row${Number(site.completed) > Number(site.participants || 0) && site.participants !== '' ? ' yard-number-invalid' : ''}`} key={JSON.stringify([site.facilityCode, site.yard])}>
                   <strong className="yard-number-place">{site.facilityCode} · {site.yard}</strong>
@@ -526,8 +522,8 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                       <p className="yard-count-error">Completed cannot exceed enrollment at this yard.</p>
                     </>}
                 </div>)}</div>
-              {!editing.sites.length && <p className="section-empty" id="program-counts-empty">Rows appear here once you choose a facility and its yards in section 2.</p>}
-            </fieldset>
+              {!editing.sites.length && <p className="section-empty" id="program-counts-empty">Rows appear here once you choose a facility and its yards in “Where it ran”.</p>}
+            </section>
             <div className="next-actions">
               <button type="submit" className="continue-button" disabled={!editing.sites.length} aria-describedby="program-counts-empty">Done with program</button>
               {programs.some(program => program.id === editing.id) &&
