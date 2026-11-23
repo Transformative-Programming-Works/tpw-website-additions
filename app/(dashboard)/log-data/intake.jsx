@@ -1,6 +1,6 @@
 'use client';
 
-import { LuCheck, LuChevronRight, LuCircleAlert, LuPlus, LuX } from 'react-icons/lu';
+import { LuCheck, LuChevronRight, LuCircleAlert, LuPlus, LuX, LuInfo } from 'react-icons/lu';
 
 import { useEffect, useRef, useState } from 'react';
 import { currentReportingPeriod } from '../../../lib/reporting/reporting-period.js';
@@ -355,20 +355,9 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
           <a href="#programs">Programs</a>
           <a href="#submit">Submit</a>
         </nav>
-        <div className="report-summary">
-          <div className="report-summary-item">
-            <span className="report-summary-label">Organization</span>
-            {account === 'tpw'
-              ? <input id="organization" autoComplete="organization" maxLength={120} aria-label="Organization"
-                placeholder="Organization name" value={organization} onChange={event => setOrganization(event.target.value)} />
-              : <strong id="report-organization">{organization || 'Not set'}</strong>}
-          </div>
-          <div className="report-summary-item">
-            <span className="report-summary-label">Reporting period</span>
-            <strong id="report-period">{period ? `Q${period.quarter} ${period.year}` : '—'}</strong>
-          </div>
-        </div>
-        {!pending && (prefilling || prefilledFrom || prefillFailed) && <div className="report-banner" role={prefillFailed ? 'alert' : 'status'}>
+        {!pending && (prefilling || prefilledFrom || prefillFailed) && <div className={`report-notice${prefillFailed ? ' report-notice-error' : ''}`} role={prefillFailed ? 'alert' : 'status'}>
+          {prefillFailed ? <LuCircleAlert className="report-notice-icon" aria-hidden="true" /> : <LuInfo className="report-notice-icon" aria-hidden="true" />}
+          <div className="report-notice-body">
           {prefilling && <span>Loading your last report…</span>}
           {!prefilling && prefilledFrom && <>
             <span>Filled in from your last report (Q{prefilledFrom.quarter} {prefilledFrom.year}).</span>
@@ -379,10 +368,14 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
             <button type="button" onClick={retryPrefill}>Retry loading</button>
             <a href={`?account=${account}&blank=1`}>Start blank</a>
           </>}
+          </div>
         </div>}
 
         <section id="reporting-period" className="report-section" aria-labelledby="reporting-period-heading">
-          <h2 id="reporting-period-heading" className="report-heading">Reporting period</h2>
+          <h2 id="reporting-period-heading" className="report-heading">{account === 'tpw' ? 'Organization and reporting period' : 'Reporting period'}</h2>
+          {account === 'tpw' && <label className="form-field"><span className="field-label">Organization</span>
+            <input id="organization" autoComplete="organization" maxLength={120} aria-required="true"
+              placeholder="Organization name" value={organization} onChange={event => setOrganization(event.target.value)} /></label>}
           {period ? <>
 
             {quarterRange && <p className="quarter-range"><strong>Q{period.quarter} {period.year}</strong> runs {quarterRange.label}.</p>}
@@ -403,7 +396,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
             {locations.map(location => <div className="facility-row" key={location.code}>
               <div className="facility-row-header">
                 <strong>{location.name}</strong>
-                <button type="button" className="facility-remove" aria-label={`Remove ${location.name}`} onClick={() => removeLocation(location)}><LuX aria-hidden="true" /></button>
+                <button type="button" className="facility-remove" title={`Remove ${location.name} from this report`} aria-label={`Remove ${location.name} from this report`} onClick={() => removeLocation(location)}>Remove</button>
               </div>
               <fieldset className="yard-choices"><legend>Yards you operate in</legend>
                 {[...new Set(['A Yard', 'B Yard', 'C Yard', 'D Yard', 'E Yard', 'F Yard', 'North', 'South', 'Reception', 'Ad Seg', ...location.yards])].map(yard =>
