@@ -48,7 +48,7 @@ submitted report, counting only navigation clicks (not typing or ticking boxes).
 |---|---|---|
 | Screens | 5 (start choice → reporting period → facilities → programs → submitted) | 1 report page, plus the confirmation that replaces it |
 | Navigation clicks | 5 (`Use previous entries` → `Continue` → `Continue to programs` → `Done with program` → `Finish and submit`) | 2 (`Done with program` → `Finish and submit`) |
-| Clicks before the whole form is visible | 0 for the choice screen, but every later step was hidden | 0 — all four sections are on the page from load |
+| Clicks before the whole form is visible | 0 for the choice screen, but every later step was hidden | 0 — all three sections are on the page from load |
 
 What moved onto the one page:
 
@@ -60,7 +60,7 @@ What moved onto the one page:
   organisation, so the name is read-only text in the sticky summary. Only the TPW staff view keeps an
   editable organisation name.
 - Quarter and year, facilities and yards, the program editor, the program list and the submit action are
-  now four sections (`Reporting period`, `Facilities and yards`, `Programs`, `Submit`) on one page.
+  now three sections (`Reporting period`, `Programs`, `Submit`) on one page.
 - The per-step `Back` buttons are replaced by one anchor nav at the top, and a sticky summary keeps the
   organisation and reporting period visible while scrolling.
 
@@ -107,9 +107,9 @@ Measured on the shortest path from opening Log data to a saved report, one progr
 | | Screens | Navigation clicks before a field appears | What is visible at the start |
 |---|---|---|---|
 | Before (published `main`) | 5: how to start, quarter, facilities, programs, receipt | 3 (start, continue, continue to programs) | one question and two buttons |
-| After (`a11y/ux-audit`) | 1 report + receipt | 0 | period, facilities, programs and submit on one page |
+| After (`a11y/ux-audit`) | 1 report + receipt | 0 | period, programs and submit on one page |
 
-The page keeps a four-link skip row (period, facilities, programs, submit) and a compact
+The page keeps a three-link skip row (period, programs, submit) and a compact
 organization/quarter summary, so the whole report is one scroll instead of a sequence of
 unknown steps. Nothing is hidden behind a step the member has not seen yet.
 
@@ -132,7 +132,7 @@ The resource library on TPW's own site remains the source of truth for anything 
   2026"), and "Use the quarter’s dates" fills both fields in one click. The start field is bounded
   by the quarter start, the end field by the start date. Nothing is pre-filled automatically:
   a guessed date is worse than a chosen one.
-- The empty rows in section 3 used a muted paragraph that looked like a validation message next to
+- The empty rows in the yard rows used a muted paragraph that looked like a validation message next to
   a live button. It is now a neutral dashed note that names the missing step in plain words, the
   note is what the "Done with program" button points at with `aria-describedby`, and the button is
   disabled until at least one yard is chosen, so the state and its reason agree.
@@ -142,7 +142,7 @@ The resource library on TPW's own site remains the source of truth for anything 
 
 - `npm run test:browser` asserts the header structure, the portal drawer, the collapsed export
   disclosure, the annual report tab and embedding, and no overflow at 390px. It also walks the new Log
-  data flow: no `Use previous entries` button, all four sections on one page, explicit yard numbers,
+  data flow: no `Use previous entries` button, all three sections on one page, explicit yard numbers,
   submit, reload, receipt, inline submission history on the Submissions tab, and the embedded PDF.
 - A browser pass at 320px measured `document.documentElement.scrollWidth <= innerWidth` on Overview,
   Programs, Your submissions and Annual report.

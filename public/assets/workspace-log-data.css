@@ -237,7 +237,7 @@
   .program-card { border: 1px solid #ddd; border-radius: 12px; padding: 20px; }
   .prison-options { margin: 0; padding: 16px; border: 1px solid #ddd; border-radius: 8px; min-width: 0; }
   .prison-options legend { font-weight: 700; padding: 0 6px; }
-  .program-assignments { display: grid; gap: 10px; }
+
   .assignment-row { display: grid; gap: 10px; padding: 12px 14px; border: 1px solid #d8d8d8; border-radius: 8px; background: #fff; }
   .assignment-row label { display: flex; align-items: baseline; gap: 10px; cursor: pointer; }
   .assignment-row input { accent-color: var(--prison, var(--sage)); width: 18px; height: 18px; flex-shrink: 0; }
@@ -579,7 +579,7 @@
 .submit-totals { display: flex; flex-wrap: wrap; gap: 6px 28px; font-size: 16px; }
 .submit-totals strong { font-size: 20px; }
 .submit-requirements { margin: 0; padding-left: 22px; color: #6b2b24; font-size: 16px; }
-.facility-rows { display: grid; gap: 12px; }
+
 .facility-row { display: grid; gap: 12px; padding: 16px; border: 1px solid #d8d8d8; border-radius: 10px; background: #fff; }
 .facility-row-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
 .facility-row-header strong { font-size: 17px; overflow-wrap: anywhere; }
@@ -630,11 +630,11 @@
 .report-summary strong { font-size: 16px; }
 
 /* Prefill notice: one line, no filled block. */
-.tpw-site .tpw-workspace .quarter-preview .report-notice { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 12px; padding: 10px 14px; border: 1px solid #d8e2d4; border-radius: 8px; background: #f5f8f4; color: #2f2f2f; font-size: 15px; line-height: 1.5; }
+.tpw-site .tpw-workspace .quarter-preview .report-notice { display: flex; gap: 8px; align-items: center; margin: 0 0 10px; padding: 6px 12px; border: 1px solid #d8e2d4; border-radius: 6px; background: #f5f8f4; color: #2f2f2f; font-size: 15px; line-height: 1.4; }
 .tpw-site .tpw-workspace .quarter-preview .report-notice-error { border-color: #f0c9c4; background: #fdf4f2; }
-.report-notice-icon { flex: none; margin-top: 2px; color: #3d6b48; }
+.report-notice-icon { flex: none; color: #3d6b48; }
 .report-notice-error .report-notice-icon { color: #8c1d18; }
-.report-notice-body { display: flex; flex-wrap: wrap; gap: 2px 12px; align-items: baseline; min-width: 0; }
+.report-notice-body { display: flex; flex-wrap: wrap; gap: 0 10px; align-items: baseline; min-width: 0; }
 .report-notice-body button { font: inherit; }
 .report-notice-body a { color: #214c30; }
 .report-banner:not(:empty) { margin-bottom: 4px; }
@@ -718,6 +718,40 @@
 @media (max-width: 1179px) {
   .report-rail-title { display: none; }
 }
+
+  /* Program editor: the facility picker owns the footprint, so each facility's yards and
+     participant counts sit together instead of being chosen again in a separate step. */
+  .program-facilities { display: grid; gap: 12px; }
+  .program-facilities > .facility-row { padding: 14px 0; }
+  .program-facilities .facility-row-header strong { font-size: 17px; }
+
+  /* One row per yard: the tick, the yard's name and its two counts are the same row, so a yard's
+     numbers can never be entered in a second place. The rows span the fieldset's yard grid. */
+  .yard-choices > .yard-number-rows { grid-column: 1 / -1; }
+  .yard-number-row .yard-number-pick { display: flex; align-items: center; align-self: center; gap: 10px; min-width: 0; font-size: 16px; font-weight: 700; overflow-wrap: anywhere; cursor: pointer; }
+  .yard-number-row .yard-number-pick input[type="checkbox"] { flex: none; width: 18px; height: 18px; accent-color: var(--prison, var(--sage)); }
+  /* The count cells keep their label above the box even though the fieldset's generic label rule
+     would make every label a flex row. */
+  .yard-choices label.yard-count { display: grid; align-items: stretch; gap: 4px; cursor: default; }
+  .yard-number-row .count-input:disabled { border-color: #d8d8d8; background: #f4f4f2; color: #8a8a86; cursor: not-allowed; }
+
+/* One rule per section was three rules too many: spacing marks the sections. */
+.tpw-site .tpw-workspace .quarter-preview .report-section { border-top: 0; padding-top: 0; margin-top: 36px; }
+.quarter-preview .facility-row { border-top: 0; padding-top: 8px; }
+.quarter-preview .assignment-row { border-top: 0; }
+.quarter-preview .editor-section + .editor-section { padding-top: 20px; border-top: 0; }
+
+/* Keep one rule where the content changes kind: the report body ends, the actions begin. */
+.tpw-site .tpw-workspace .quarter-preview #submit { border-top: 1px solid #dcdcdc; padding-top: 24px; }
+
+/* A row warning belongs under its own row, not wedged into the input columns. */
+.tpw-site .tpw-workspace .quarter-preview .yard-number-row { grid-template-columns: auto minmax(0, 1fr) minmax(0, 1fr); }
+.tpw-site .tpw-workspace .quarter-preview .yard-warning-icon { grid-column: 1; grid-row: 2; align-self: center; }
+.tpw-site .tpw-workspace .quarter-preview .yard-count-error { grid-column: 2 / -1; grid-row: 2; margin: 4px 0 0; }
+
+/* Rows are separated by space, not by a rule under every yard. */
+.tpw-site .tpw-workspace .quarter-preview .yard-number-row { border-bottom: 0; padding: 8px 0; }
+.tpw-site .tpw-workspace .quarter-preview .yard-number-row + .yard-number-row { margin-top: 2px; }
 }
 
 /* Quarter dates and empty-state instructions. */
