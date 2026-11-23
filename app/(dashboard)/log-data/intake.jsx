@@ -74,6 +74,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
   const [receipt, setReceipt] = useState('');
   const [error, setError] = useState('');
   const [prefilling, setPrefilling] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [prefillFailed, setPrefillFailed] = useState(false);
   const [prefilledFrom, setPrefilledFrom] = useState(null);
@@ -94,6 +95,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
         setPrograms(saved.submission.programs);
         setReceipt(saved.receipt || '');
         setDone(Boolean(saved.receipt));
+        setLoaded(true);
         return;
       }
     } catch { setError('Could not read the saved attempt.'); }
@@ -122,19 +124,24 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
         setLocations([...locations.values()]);
         setPrograms(previous);
         if (latest?.reportingPeriod?.quarter) setPrefilledFrom(latest.reportingPeriod);
+        setLoaded(true);
 
       }).catch(() => { if (!controller.signal.aborted) setPrefillFailed(true); })
-        .finally(() => { if (!controller.signal.aborted) setPrefilling(false); });
+        .finally(() => { if (!controller.signal.aborted) { setPrefilling(false); setLoaded(true); } });
+    } else {
+      setLoaded(true);
     }
     return () => controller.abort();
   }, [account, blank, key, prefillAttempt]);
 
-  // Open a first program only once loading has finished. Running this before prefill or a
-  // recovered attempt arrives left a stray blank editor that blocked "Retry submission".
+  // Open a first program only once loading has finished. The state read here is from the same
+  // render, so a bare `prefilling` check is not enough: `loaded` is set at the end of the fetch
+  // (and immediately for ?blank=1 or the staff view), so prefill and a recovered attempt have
+  // already been applied before this can open a blank editor over them.
   useEffect(() => {
-    if (prefilling || prefillFailed || done || pending || editing || programs.length) return;
+    if (!loaded || prefillFailed || done || pending || editing || programs.length) return;
     setEditing(newProgram());
-  }, [prefilling, prefillFailed, done, pending, editing, programs.length]);
+  }, [loaded, prefillFailed, done, pending, editing, programs.length]);
 
   function retryPrefill() {
     setPrefillFailed(false);
@@ -270,7 +277,8 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
     ...(programs.length ? [] : ['Add at least one program']),
     ...(programs.some(program => !isReady(program)) ? ['Finish each program’s status and yards'] : [])
   ];
-  const canSubmit = !prefilling && !submitting && !editing && !missing.length;
+  // A recovered attempt already holds its answers, so the checklist does not apply to it.
+  const canSubmit = !prefilling && !submitting && !editing && (pending ? true : !missing.length);
 
   return <main className="tpw-workspace"><div className="tpw-workspace-content">
     <h1 className="tpw-page-title" id="report-top">Log data</h1>
@@ -397,7 +405,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                 <strong>{location.name}</strong>
                 <button type="button" className="facility-remove" aria-label={`Remove ${location.name}`} onClick={() => removeLocation(location)}><LuX aria-hidden="true" /></button>
               </div>
-              <fieldset className="yard-choices"><legend>Yards you operate in</legend><p className="yard-hint">Select all that apply.</p>
+              <fieldset className="yard-choices"><legend>Yards you operate in</legend>
                 {[...new Set(['A Yard', 'B Yard', 'C Yard', 'D Yard', 'E Yard', 'F Yard', 'North', 'South', 'Reception', 'Ad Seg', ...location.yards])].map(yard =>
                   <label key={yard}><input type="checkbox" checked={location.yards.includes(yard)}
                     onChange={event => toggleYard(location, yard, event.target.checked)} />{yard}</label>)}
@@ -411,7 +419,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
               }}><label htmlFor={`yard-${location.code}`}>Yard not listed?</label><div className="yard-add-row"><input id={`yard-${location.code}`} name="yard" required maxLength={100} /><button aria-label="Add yard">Add</button></div></form>
             </div>)}
           </div>
-          {!locations.length && <p className="form-hint">No facilities yet. Add one below.</p>}
+          {!locations.length && <p className="form-hint">No facilities added yet.</p>}
           <label className="form-field"><span className="field-label">Add a facility</span> <select value="" onChange={event => {
             userChanged.current = true;
             const code = event.target.value;
