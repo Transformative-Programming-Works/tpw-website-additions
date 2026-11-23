@@ -520,8 +520,9 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
 
             <section className="editor-section" id="program-facilities" tabIndex={-1} aria-labelledby="program-section-2">
               <h3 className="editor-heading" id="program-section-2">Where it ran</h3>
-              <label className="form-field"><span className="field-label">Course hours <span className="label-note">(per participant)</span></span>
-                <NumberStepper id="program-hours" value={editing.courseHours} onChange={courseHours => setEditing({ ...editing, courseHours })} fractional /></label>
+              <div className="inline-field">
+                <label className="field-label" htmlFor="program-hours">Course hours <span className="label-note">per participant</span></label>
+                <NumberStepper id="program-hours" label="Course hours per participant" value={editing.courseHours} onChange={courseHours => setEditing({ ...editing, courseHours })} fractional /></div>
               <div className="program-assignments">{locations.map(location => {
                 const selectedCodes = editing.selectedFacilityCodes ?? [...new Set(editing.sites.map(site => site.facilityCode))];
                 const selected = selectedCodes.includes(location.code);
@@ -532,7 +533,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                     selectedFacilityCodes: selected ? selectedCodes.filter(code => code !== location.code) : [...selectedCodes, location.code],
                     sites: selected ? editing.sites.filter(site => site.facilityCode !== location.code) : editing.sites
                   })} />{location.name}</label>
-                  {selected && <fieldset className="program-yards"><legend>Yards</legend>
+                  {selected && <fieldset className="program-yards"><legend className="sr-only">Yards, participants and completions</legend>
                     <div className="yard-number-rows">{location.yards.map(yard => {
                       const site = editing.sites.find(item => item.facilityCode === location.code && item.yard === yard);
                       const over = !!site && String(site.participants).trim() !== '' && Number(site.completed) > Number(site.participants);
@@ -542,12 +543,10 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                             if (!event.target.checked) forgetCarried(location.code, yard);
                             setEditing({ ...editing, sites: event.target.checked ? [...editing.sites, siteFor(yard)] : editing.sites.filter(item => item !== site) });
                           }} />{yard}</label>
-                        {[['participants', 'Participants enrolled'], ['completed', 'Completed']].map(([key, label]) =>
-                          <label className="yard-count" key={key}><span className="yard-count-label">{label}</span>
-                            <NumberStepper id={'count-' + location.code + '-' + yard + '-' + key} disabled={!site}
-                              placeholder={site ? '0' : '—'} value={site ? site[key] : ''}
-                              onChange={value => setYardCount(location.code, yard, key, value)} />
-                          </label>)}
+                        {[['participants', 'Participants enrolled', 'Enrolled'], ['completed', 'Completed', 'Completed']].map(([key, label, hint]) =>
+                          <NumberStepper key={key} id={'count-' + location.code + '-' + yard + '-' + key} label={label + ' at ' + yard}
+                            disabled={!site} placeholder={site ? hint : '—'} value={site ? site[key] : ''}
+                            onChange={value => setYardCount(location.code, yard, key, value)} />)}
                         {over && <p className="yard-count-error">Completed cannot exceed enrollment at this yard.</p>}
                       </div>;
                     })}</div>
@@ -592,8 +591,8 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
 
 // One plain number box instead of a −/+ spinner: typing is what people already do, the box is
 // large enough to hit, and its size does not change between courses and participant counts.
-function NumberStepper({ value, onChange, fractional = false, id }) {
-  return <input id={id} className="count-input" type="number" inputMode={fractional ? 'decimal' : 'numeric'}
-    min="0" max="10000000" step={fractional ? 'any' : '1'} placeholder="0" value={value}
+function NumberStepper({ value, onChange, fractional = false, id, disabled = false, placeholder = '0', label }) {
+  return <input id={id} aria-label={label} className="count-input" type="number" inputMode={fractional ? 'decimal' : 'numeric'}
+    min="0" max="10000000" step={fractional ? 'any' : '1'} placeholder={placeholder} value={value} disabled={disabled}
     onChange={event => onChange(event.target.value)} />;
 }

@@ -240,7 +240,7 @@
   .program-assignments { display: grid; gap: 10px; }
   .assignment-row { display: grid; gap: 10px; padding: 12px 14px; border: 1px solid #d8d8d8; border-radius: 8px; background: #fff; }
   .assignment-row label { display: flex; align-items: baseline; gap: 10px; cursor: pointer; }
-  .assignment-row input { accent-color: var(--prison, var(--sage)); width: 18px; height: 18px; flex-shrink: 0; }
+  .assignment-row > label input { accent-color: var(--prison, var(--sage)); width: 18px; height: 18px; flex-shrink: 0; }
   .program-yards { margin: 2px 0 0 28px; padding: 8px 0 2px 12px; border: 0; border-left: 3px solid var(--prison, var(--sage)); display: grid; gap: 8px; min-width: 0; }
   .program-yards legend { font-weight: 700; font-size: 15px; padding: 0; }
   .program-yards label { font-weight: 500; align-items: center; }
@@ -771,6 +771,32 @@
 
 /* The program header is a heading, not a table rule. */
 .tpw-site .tpw-workspace .quarter-preview .program-card .organization-summary { padding-bottom: 0; border-bottom: 0; }
+
+/* One line per yard: name, enrolled, completed. Nothing stacked, nothing reserved. */
+.tpw-site .tpw-workspace .quarter-preview .program-yards { margin: 4px 0 0 24px; padding: 0; border: 0; }
+.tpw-site .tpw-workspace .quarter-preview .program-yards .yard-number-rows { gap: 0; }
+.tpw-site .tpw-workspace .quarter-preview .program-yards .yard-number-row {
+  grid-template-columns: minmax(120px, 1fr) 116px 116px; gap: 8px; align-items: center;
+  padding: 2px 0; border: 0; min-height: 0;
+}
+.tpw-site .tpw-workspace .quarter-preview .program-yards .yard-number-pick { font-size: 15px; }
+.tpw-site .tpw-workspace .quarter-preview .program-yards .count-input { min-height: 38px; height: 38px; font-size: 15px; padding: 4px 8px; }
+.tpw-site .tpw-workspace .quarter-preview .assignment-row > label { min-height: 40px; }
+.tpw-site .tpw-workspace .quarter-preview .inline-field { display: flex; align-items: center; gap: 14px; max-width: 420px; }
+.tpw-site .tpw-workspace .quarter-preview .inline-field .field-label { flex: 1 1 auto; margin: 0; }
+.tpw-site .tpw-workspace .quarter-preview .inline-field .count-input { flex: 0 0 120px; }
+@media (max-width: 700px) {
+  .tpw-site .tpw-workspace .quarter-preview .program-yards { margin-left: 0; }
+  .tpw-site .tpw-workspace .quarter-preview .program-yards .yard-number-row { grid-template-columns: 1fr 84px 84px; }
+}
+
+/* Keep the numbers next to the yard name instead of pinned to the far edge. */
+.tpw-site .tpw-workspace .quarter-preview .program-yards .yard-number-row {
+  grid-template-columns: minmax(150px, 300px) 116px 116px; justify-content: start;
+}
+
+.tpw-site .tpw-workspace .quarter-preview .program-yards .yard-number-row { grid-template-columns: minmax(150px, 280px) 132px 132px; }
+.tpw-site .tpw-workspace .quarter-preview .program-yards .count-input { font-size: 14px; }
 }
 
 /* Quarter dates and empty-state instructions. */
