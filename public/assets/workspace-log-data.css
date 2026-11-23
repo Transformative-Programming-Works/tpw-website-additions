@@ -552,7 +552,7 @@
 .editor-section { border: 0; margin: 0; padding: 0; display: grid; gap: 18px; min-width: 0; }
 .editor-section > legend { padding: 0; margin-bottom: 2px; font-size: 19px; font-weight: 700; }
 .editor-section > legend + .form-hint { margin-top: -10px; }
-.editor-section + .editor-section { margin-top: 4px; padding-top: 20px; border-top: 1px solid #e6e6e6; }
+.editor-section + .editor-section { margin-top: 4px; padding-top: 24px; border-top: 1px solid #e6e6e6; }
 .error-summary { border: 2px solid #b3261e; border-radius: 10px; padding: 16px 18px; background: #fdf3f2; }
 .error-summary h4 { display: flex; align-items: center; gap: 8px; margin: 0 0 6px; font-size: 19px; }
 .error-summary ol { margin: 0; padding-left: 22px; }
@@ -606,3 +606,11 @@
 .quarter-options strong { font-size: 20px; }
 .quarter-options small { font-size: 13px; }
 }
+
+/* Quarter dates and empty-state instructions. */
+.quarter-range { margin: 0; font-size: 16px; color: #3e3e3e; }
+.date-block { display: grid; gap: 8px; }
+.date-block .form-hint { margin: 0; }
+.quarter-fill { justify-self: start; min-height: 44px; padding: 8px 16px; border: 1px solid #7e8a7a; border-radius: 999px; background: #fff; color: var(--ink); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
+.quarter-fill:hover { background: #f0f5f0; }
+.section-empty { margin: 0; padding: 12px 14px; border: 1px dashed #b9c8b8; border-radius: 8px; background: #fbfbf9; color: #3e3e3e; font-size: 16px; line-height: 1.5; }

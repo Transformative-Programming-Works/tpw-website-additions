@@ -252,6 +252,18 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
     setProblems([]);
   }
 
+  // The quarter the member picked, as real dates, so the date fields and the period
+  // heading say the same thing instead of leaving them to work it out.
+  const quarterRange = (() => {
+    const quarter = Number(period?.quarter), year = Number(period?.year);
+    if (!quarter || quarter < 1 || quarter > 4 || !year) return null;
+    const first = new Date(Date.UTC(year, (quarter - 1) * 3, 1));
+    const last = new Date(Date.UTC(year, quarter * 3, 0));
+    const iso = date => date.toISOString().slice(0, 10);
+    const long = date => date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric', timeZone: 'UTC' });
+    return { start: iso(first), end: iso(last), label: long(first) + ' – ' + long(last) };
+  })();
+
   const missing = [
     ...(locations.length ? [] : ['Add at least one facility']),
     ...(locations.length && locations.some(location => !location.yards.length) ? ['Choose at least one yard at each facility'] : []),
@@ -364,6 +376,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
           <h2 id="reporting-period-heading" className="report-heading">Reporting period</h2>
           {period ? <>
             <p className="form-hint">We’ve selected the current quarter. Change it to report for a different period.</p>
+            {quarterRange && <p className="quarter-range"><strong>Q{period.quarter} {period.year}</strong> runs {quarterRange.label}.</p>}
             <fieldset className="quarter-options"><legend className="sr-only">Reporting quarter</legend>
               {['Jan – Mar', 'Apr – Jun', 'Jul – Sep', 'Oct – Dec'].map((months, index) => <label key={months}>
                 <input type="radio" name="quarter" checked={period.quarter === index + 1} onChange={() => setPeriod({ ...period, quarter: index + 1 })} />
@@ -450,17 +463,27 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                 <select id="program-status" aria-required="true" value={editing.status} onChange={event => setEditing({ ...editing, status: event.target.value })}>
                   <option value="" disabled>Select a status</option>
                   {['Planned', 'In Progress', 'Completed'].map(status => <option key={status}>{status}</option>)}</select></label>
-              <div className="date-row">{[[ 'startDate', 'Start date', 'program-start'], ['endDate', 'End date', 'program-end']].map(([key, label, id]) =>
-                <label className="form-field" key={key}><span className="field-label">{label}</span>
-                  <input id={id} type="date" min={key === 'endDate' ? editing.startDate : undefined}
-                    value={editing[key]} onChange={event => setEditing({ ...editing, [key]: event.target.value })} /></label>)}</div>
+              <div className="date-block">
+                <div className="date-row">{[[ 'startDate', 'Start date', 'program-start'], ['endDate', 'End date', 'program-end']].map(([key, label, id]) =>
+                  <label className="form-field" key={key}><span className="field-label">{label}</span>
+                    <input id={id} type="date" min={key === 'endDate' ? editing.startDate : quarterRange?.start}
+                      max={key === 'startDate' ? (editing.endDate || quarterRange?.end) : undefined}
+                      aria-describedby="program-dates-help"
+                      value={editing[key]} onChange={event => setEditing({ ...editing, [key]: event.target.value })} /></label>)}</div>
+                <p className="form-hint" id="program-dates-help">
+                  {quarterRange ? <>Reported quarter: <strong>{quarterRange.label}</strong>. Dates outside it are fine if the program ran across quarters.</> : 'Dates are optional while a program is Planned.'}
+                </p>
+                {quarterRange && <button type="button" className="quarter-fill" onClick={() => setEditing({ ...editing, startDate: quarterRange.start, endDate: quarterRange.end })}>
+                  Use the quarter’s dates
+                </button>}
+              </div>
               <label className="form-field"><span className="field-label">Course hours <span className="label-note">(per participant)</span></span>
                 <NumberStepper id="program-hours" value={editing.courseHours} onChange={courseHours => setEditing({ ...editing, courseHours })} fractional /></label>
             </fieldset>
 
             <fieldset className="editor-section" id="program-facilities" tabIndex={-1}>
               <legend>2. Where it ran</legend>
-              <p className="form-hint">Tick each facility, then tick the yards where this program runs.</p>
+              <p className="form-hint">Choose each facility, then the yards where this program runs.</p>
               <div className="program-assignments">{locations.map(location => {
                 const selectedCodes = editing.selectedFacilityCodes ?? [...new Set(editing.sites.map(site => site.facilityCode))];
                 const selected = selectedCodes.includes(location.code);
@@ -482,7 +505,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                   </fieldset>}
                 </div>;
               })}</div>
-              {!locations.length && <p className="yard-hint">Add a facility in the section above first.</p>}
+              {!locations.length && <p className="section-empty">Add a facility in “Facilities and yards” above, then its yards will be listed here.</p>}
             </fieldset>
 
             <fieldset className="editor-section">
@@ -503,10 +526,10 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
                       <p className="yard-count-error">Completed cannot exceed enrollment at this yard.</p>
                     </>}
                 </div>)}</div>
-              {!editing.sites.length && <p className="yard-hint">Tick a facility and yard in section 2 first.</p>}
+              {!editing.sites.length && <p className="section-empty" id="program-counts-empty">Rows appear here once you choose a facility and its yards in section 2.</p>}
             </fieldset>
             <div className="next-actions">
-              <button type="submit" className="continue-button">Done with program</button>
+              <button type="submit" className="continue-button" disabled={!editing.sites.length} aria-describedby="program-counts-empty">Done with program</button>
               {programs.some(program => program.id === editing.id) &&
                 <button className="program-remove" type="button" onClick={cancelProgramEdit}>Cancel editing</button>}
             </div>

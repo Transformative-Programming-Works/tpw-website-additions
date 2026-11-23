@@ -125,6 +125,19 @@ initiatives, resources, announcements and help, with the original external links
 was removed; the header entry and the nav tab both open the page, and sign-out moved onto it.
 The resource library on TPW's own site remains the source of truth for anything not copied here.
 
+
+## Dates and empty states in the program editor
+
+- The reporting quarter is now written as dates ("Q4 2026 runs October 1, 2026 – December 31,
+  2026"), and "Use the quarter’s dates" fills both fields in one click. The start field is bounded
+  by the quarter start, the end field by the start date. Nothing is pre-filled automatically:
+  a guessed date is worse than a chosen one.
+- The empty rows in section 3 used a muted paragraph that looked like a validation message next to
+  a live button. It is now a neutral dashed note that names the missing step in plain words, the
+  note is what the "Done with program" button points at with `aria-describedby`, and the button is
+  disabled until at least one yard is chosen, so the state and its reason agree.
+- Wording: "tick" is gone from instructions; the form says "choose" and "type".
+
 ## How this was checked
 
 - `npm run test:browser` asserts the header structure, the portal drawer, the collapsed export
