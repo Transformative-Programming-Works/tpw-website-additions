@@ -605,6 +605,63 @@
 .quarter-options span { padding: 12px 8px; border-radius: 8px; }
 .quarter-options strong { font-size: 20px; }
 .quarter-options small { font-size: 13px; }
+/* KISS pass: one flat column, hairlines instead of cards, and section nav that stays out of the way. */
+.tpw-site .tpw-workspace .quarter-preview .demo-form { max-width: 860px; margin: 0 auto; padding: 0; border: 0; border-radius: 0; background: transparent; display: block; }
+.quarter-preview .form-title { margin-bottom: 0; }
+.tpw-site .tpw-workspace .quarter-preview .report-section { background: transparent; border-radius: 0; }
+
+/* Section nav: a quiet rail on wide screens that fades in on hover or focus, a sticky strip on small. */
+.report-rail { display: flex; flex-wrap: wrap; gap: 2px 18px; margin: 0 0 12px; font-size: 15px; }
+.report-rail a { display: inline-flex; align-items: center; min-height: 44px; color: #214c30; font-weight: 700; }
+@media (min-width: 1180px) {
+  .report-rail {
+    position: fixed; left: max(12px, calc((100vw - 860px) / 2 - 150px)); top: 34%;
+    display: grid; gap: 2px; margin: 0; padding: 8px 10px; border-radius: 10px;
+    background: #fff; box-shadow: 0 2px 12px rgb(0 0 0 / 12%); font-size: 14px;
+    opacity: .45; transition: opacity .15s ease;
+  }
+  .report-rail:hover, .report-rail:focus-within { opacity: 1; }
+  .report-rail a { min-height: 32px; color: #3e3e3e; font-weight: 400; }
+  .report-rail a:hover, .report-rail a:focus-visible { color: #000; font-weight: 700; }
+}
+
+/* The summary is a line of facts, not a panel. */
+.tpw-site .tpw-workspace .quarter-preview .report-summary { display: flex; flex-wrap: wrap; gap: 4px 28px; margin: 0 0 8px; padding: 0 0 10px; border: 0; border-bottom: 1px solid #e2e2e2; border-radius: 0; background: transparent; font-size: 16px; }
+.report-summary-item { display: flex; gap: 6px; align-items: baseline; }
+.report-summary-label { font-size: 14px; font-weight: 400; color: #3e3e3e; }
+.report-summary strong { font-size: 16px; }
+
+/* Prefill notice: one line, no filled block. */
+.tpw-site .tpw-workspace .quarter-preview .report-banner { padding: 6px 0; border: 0; border-radius: 0; background: transparent; font-size: 16px; }
+.report-banner:not(:empty) { margin-bottom: 4px; }
+
+/* Sections: rules, not cards. */
+.tpw-site .tpw-workspace .quarter-preview .report-section { display: grid; gap: 16px; margin-top: 28px; padding: 24px 0 0; border: 0; border-top: 1px solid #dcdcdc; border-radius: 0; background: transparent; }
+.report-heading { font-size: 1.45rem; }
+
+/* Quarters: four choices in a row, not four cards. */
+.quarter-preview .quarter-options { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.quarter-preview .quarter-options label { position: static; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.quarter-preview .quarter-options input { position: static; width: 18px; height: 18px; opacity: 1; margin: 0; accent-color: var(--sage); }
+.quarter-preview .quarter-options span { display: inline; padding: 0; border: 0; border-radius: 0; text-align: left; background: none; }
+.quarter-preview .quarter-options strong { font-size: 16px; font-weight: 700; }
+.quarter-preview .quarter-options small { margin-inline-start: 6px; font-size: 14px; }
+.quarter-preview .quarter-options input:checked + span { border: 0; background: none; color: #000; font-weight: 700; }
+.quarter-preview .quarter-options input:focus-visible + span { outline: 2px solid var(--sage); outline-offset: 3px; border-radius: 4px; }
+
+/* Facilities: rows on the page, not boxes inside boxes. */
+.quarter-preview .facility-row { padding: 16px 0; border: 0; border-top: 1px solid #e6e6e6; border-radius: 0; background: transparent; gap: 10px; }
+.facility-row:first-child { border-top: 0; }
+.facility-row .yard-choices legend { width: auto; border: 0; padding: 0 0 6px; font-weight: 700; }
+.facility-row .yard-choices { margin: 0; }
+
+/* Program editor: no nested card, no coloured rails. */
+.quarter-preview .program-card { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.quarter-preview .assignment-row { padding: 10px 0; border: 0; border-top: 1px solid #ececec; border-radius: 0; background: transparent; }
+.assignment-row:first-child { border-top: 0; }
+.quarter-preview .program-yards { border: 0; padding: 4px 0 0 22px; }
+.program-yards legend { font-weight: 700;
+}
 }
 
 /* Quarter dates and empty-state instructions. */
@@ -613,4 +670,55 @@
 .date-block .form-hint { margin: 0; }
 .quarter-fill { justify-self: start; min-height: 44px; padding: 8px 16px; border: 1px solid #7e8a7a; border-radius: 999px; background: #fff; color: var(--ink); font: inherit; font-size: 15px; font-weight: 700; cursor: pointer; }
 .quarter-fill:hover { background: #f0f5f0; }
+
 .section-empty { margin: 4px 0 16px; padding: 12px 14px; border: 1px dashed #b9c8b8; border-radius: 8px; background: #fbfbf9; color: #3e3e3e; font-size: 16px; line-height: 1.5; }
+
+/* KISS pass: one flat column, hairlines instead of cards, section nav out of the way. */
+.tpw-site .tpw-workspace .quarter-preview .demo-form { max-width: 860px; margin: 0 auto; padding: 0; border: 0; border-radius: 0; background: transparent; display: block; }
+.quarter-preview .form-title { margin-bottom: 0; }
+
+.report-rail { display: flex; flex-wrap: wrap; gap: 2px 18px; margin: 0 0 12px; font-size: 15px; }
+.report-rail a { display: inline-flex; align-items: center; min-height: 44px; color: #214c30; font-weight: 700; }
+@media (min-width: 1180px) {
+  .report-rail {
+    position: fixed; left: max(12px, calc((100vw - 860px) / 2 - 150px)); top: 34%;
+    display: grid; gap: 2px; margin: 0; padding: 8px 10px; border-radius: 10px;
+    background: #fff; box-shadow: 0 2px 12px rgb(0 0 0 / 12%); font-size: 14px;
+    opacity: .45; transition: opacity .15s ease;
+  }
+  .report-rail:hover, .report-rail:focus-within { opacity: 1; }
+  .report-rail a { min-height: 32px; color: #3e3e3e; font-weight: 400; }
+  .report-rail a:hover, .report-rail a:focus-visible { color: #000; font-weight: 700; }
+}
+
+.tpw-site .tpw-workspace .quarter-preview .report-summary { display: flex; flex-wrap: wrap; gap: 4px 28px; align-items: baseline; margin: 0 0 8px; padding: 0 0 10px; border: 0; border-bottom: 1px solid #e2e2e2; border-radius: 0; background: transparent; font-size: 16px; }
+.report-summary-item { display: flex; gap: 6px; align-items: baseline; }
+.report-summary-label { font-size: 14px; font-weight: 400; color: #3e3e3e; }
+.report-summary strong { font-size: 16px; }
+
+.tpw-site .tpw-workspace .quarter-preview .report-banner { padding: 6px 0; border: 0; border-radius: 0; background: transparent; font-size: 16px; }
+
+.tpw-site .tpw-workspace .quarter-preview .report-section { display: grid; gap: 16px; margin-top: 28px; padding: 24px 0 0; border: 0; border-top: 1px solid #dcdcdc; border-radius: 0; background: transparent; }
+.report-heading { font-size: 1.45rem; }
+
+.quarter-preview .quarter-options { display: flex; flex-wrap: wrap; gap: 8px 22px; }
+.quarter-preview .quarter-options label { position: static; display: inline-flex; align-items: center; gap: 8px; min-height: 44px; cursor: pointer; }
+.quarter-preview .quarter-options input { position: static; width: 18px; height: 18px; opacity: 1; margin: 0; accent-color: var(--sage); }
+.quarter-preview .quarter-options span { display: inline; padding: 0; border: 0; border-radius: 0; text-align: left; background: none; }
+.quarter-preview .quarter-options strong { font-size: 16px; font-weight: 700; }
+.quarter-preview .quarter-options small { margin-inline-start: 6px; font-size: 14px; }
+.quarter-preview .quarter-options input:checked + span { border: 0; background: none; color: #000; font-weight: 700; }
+.quarter-preview .quarter-options input:focus-visible + span { outline: 2px solid var(--sage); outline-offset: 3px; border-radius: 4px; }
+
+.quarter-preview .facility-row { padding: 16px 0; border: 0; border-top: 1px solid #e6e6e6; border-radius: 0; background: transparent; gap: 10px; }
+.quarter-preview .facility-row:first-child { border-top: 0; }
+.quarter-preview .facility-row .yard-choices legend { width: auto; border: 0; padding: 0 0 6px; font-weight: 700; }
+.quarter-preview .facility-row .yard-choices { margin: 0; }
+
+.quarter-preview .program-card { padding: 0; border: 0; border-radius: 0; background: transparent; }
+.quarter-preview .assignment-row { padding: 10px 0; border: 0; border-top: 1px solid #ececec; border-radius: 0; background: transparent; }
+.quarter-preview .assignment-row:first-child { border-top: 0; }
+.quarter-preview .program-yards { border: 0; padding: 4px 0 0 22px; }
+.quarter-preview .program-yards legend { font-weight: 700;
+.tpw-site .tpw-workspace .quarter-preview .report-section:first-of-type { border-top: 0; padding-top: 20px; }
+}
