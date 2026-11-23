@@ -349,7 +349,7 @@ function IntakeForm({ account, blank, organizationName, facilities = [] }) {
         </details>
       </section> : <>
         <nav className="report-rail" aria-label="Report sections">
-          <span className="sr-only">Sections of this report</span>
+          <p className="report-rail-title" aria-hidden="true">Sections</p>
           <a href="#reporting-period">Period</a>
           <a href="#facilities">Facilities</a>
           <a href="#programs">Programs</a>

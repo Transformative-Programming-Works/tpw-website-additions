@@ -685,6 +685,32 @@
 
 /* The saved-receipt state is a page state, not a card. */
 .tpw-site .tpw-workspace .quarter-preview #submission-result { border: 0; border-radius: 0; background: transparent; padding: 0; }
+
+/* Sections live in a real left column, like a contents list, not in a floating card. */
+@media (min-width: 1180px) {
+  .tpw-site .tpw-workspace .quarter-preview .demo-form {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 860px);
+    column-gap: 36px;
+    align-items: start;
+    max-width: 1044px;
+    margin: 0;
+  }
+  .tpw-site .tpw-workspace .quarter-preview .demo-form > *:not(.report-rail) { grid-column: 2; }
+  .report-rail {
+    grid-column: 1; grid-row: 1 / span 20;
+    position: sticky; top: 24px; left: auto; right: auto;
+    display: block; margin: 0; padding: 0;
+    border: 0; border-radius: 0; background: none; box-shadow: none;
+    opacity: 1; font-size: 15px; line-height: 1.4;
+  }
+  .report-rail-title { margin: 0 0 8px; color: #4c4c4c; font-size: 13px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; }
+  .report-rail a { display: block; min-height: 34px; padding: 6px 0; color: #214c30; font-weight: 400; text-decoration: underline; text-underline-offset: 3px; }
+  .report-rail a:hover, .report-rail a:focus-visible { color: #000; font-weight: 700; }
+}
+@media (max-width: 1179px) {
+  .report-rail-title { display: none; }
+}
 }
 
 /* Quarter dates and empty-state instructions. */
